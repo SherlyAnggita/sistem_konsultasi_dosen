@@ -41,11 +41,13 @@ class DetailKonsultasi extends Migration
                 'type'       => 'TEXT',
                 'constraint' => '255',
             ],
+
             'status' => [
                 'type'       => 'ENUM',
                 'constraint' => ['Menunggu', 'Disetujui', 'Ditolak', 'Selesai'],
                 'default'    => 'Menunggu',
             ],
+
             'created_at' => [
                 'type'    => 'DATETIME',
                 'null'    => true,

@@ -67,7 +67,7 @@ class AuthController extends ResourceController
     {
         $email = $this->request->getVar('email');
         $password = $this->request->getVar('password');
-        $role = $this->request->getVar('role');
+        // $role = $this->request->getVar('role');
 
         if (!$email || !$password) {
             return $this->fail('Email dan password wajib diisi.', 400);
@@ -82,10 +82,9 @@ class AuthController extends ResourceController
         if (!password_verify($password, $user['password'])) {
             return $this->fail('Password salah.', 401);
         }
-        if ($user['role'] !== $role) {
-            return $this->fail('Role tidak sesuai.');
-        }
-
+        // if ($user['role'] !== $role) {
+        //     return $this->fail('Role tidak sesuai.');
+        // }
 
 
         // JWT setup

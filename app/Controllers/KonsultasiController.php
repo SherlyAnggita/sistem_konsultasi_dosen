@@ -121,6 +121,7 @@ class KonsultasiController extends ResourceController
             'nama_dosen' => $this->request->getVar('nama_dosen'),
             'tgl_konsultasi' => $this->request->getVar('tgl_konsultasi'),
             'topik' => $this->request->getVar('topik'),
+            'status' => $this->request->getVar('status'),
         ]);
 
         return $this->respond([

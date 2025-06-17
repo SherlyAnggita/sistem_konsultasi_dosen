@@ -37,10 +37,19 @@ $routes->group('admin', ['filter' => 'jwt:admin'], function ($routes) {
     $routes->put('konsultasi/(:num)', 'KonsultasiController::update/$1');
     $routes->delete('konsultasi/(:num)', 'KonsultasiController::delete/$1');
     //ROUTES KONSULTASI END
+
+    // ROUTES JADWAL KONSULTASI
+     $routes->get('jadwal_konsultasi', 'JadwalKonsultasiController::index');
+    $routes->get('jadwal_konsultasi/(:num)', 'JadwalKonsultasiController::show/$1');
+    $routes->post('jadwal_konsultasi', 'JadwalKonsultasiController::create');
+    $routes->put('jadwal_konsultasi/(:num)', 'JadwalKonsultasiController::update/$1');
+    $routes->delete('jadwal_konsultasi/(:num)', 'JadwalKonsultasiController::delete/$1');
 });
 
 $routes->group('mahasiswa', ['filter' => 'jwt:mahasiswa'], function ($routes) {
     $routes->get('lihat', 'MahasiswaController::index');
+    $routes->get('lihat', 'JadwalKonsultasiController::index');
+
 
     //ROUTES KONSULTASI START
     $routes->get('konsultasi', 'KonsultasiController::index');
@@ -52,6 +61,21 @@ $routes->group('mahasiswa', ['filter' => 'jwt:mahasiswa'], function ($routes) {
 });
 
 $routes->group('dosen', ['filter' => 'jwt:dosen'], function ($routes) {
-    $routes->get('lihat', 'DosenController::index');
+    // LIHAT DATA DIRINYA (opsional)
+    $routes->get('dosen', 'DosenController::index'); // kalau ingin lihat semua dosen
+    $routes->get('dosen/(:num)', 'DosenController::show/$1'); // lihat profil spesifik
+
+    // KONSULTASI (lihat & edit saja)
+    $routes->get('konsultasi', 'KonsultasiController::index');
+    $routes->get('konsultasi/(:num)', 'KonsultasiController::show/$1');
+    $routes->put('konsultasi/(:num)', 'KonsultasiController::update/$1');
+
+        // ROUTES JADWAL KONSULTASI
+    $routes->get('jadwal_konsultasi', 'JadwalKonsultasiController::index');
+    $routes->get('jadwal_konsultasi/(:num)', 'JadwalKonsultasiController::show/$1');
+    $routes->post('jadwal_konsultasi', 'JadwalKonsultasiController::create');
+    $routes->put('jadwal_konsultasi/(:num)', 'JadwalKonsultasiController::update/$1');
+    $routes->delete('jadwal_konsultasi/(:num)', 'JadwalKonsultasiController::delete/$1');
     
 });
+

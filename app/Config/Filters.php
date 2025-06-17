@@ -34,7 +34,8 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
-        'login' => \Myth\Auth\Filters\LoginFilter::class,
+        // 'login' => \Myth\Auth\Filters\LoginFilter::class,
+        'auth' => \App\Filters\AuthFilter::class,
 
     ];
 
@@ -72,7 +73,7 @@ class Filters extends BaseFilters
     public array $globals = [
         'before' => [
             'honeypot',
-            'login',
+            // 'login',
             // 'csrf',
             // 'invalidchars',
         ],

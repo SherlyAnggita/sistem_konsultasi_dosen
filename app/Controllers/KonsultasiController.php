@@ -53,35 +53,32 @@ class KonsultasiController extends ResourceController
      */
     public function create()
     {
-        $data = $this->request->getJSON(true); // true = convert ke array
+       $data = $this->request->getJSON(true); // true = convert ke array
 
-        $rules = $this->validate([
-            'id_mhs' => 'required',
-            'id_dosen' => 'required',
-            'nama_mhs' => 'required',
-            'nama_dosen' => 'required',
-            'tgl_konsultasi' => 'required',
-            'topik' => 'required',
+    $rules = $this->validate([
+        'id_mhs' => 'required',
+        'id_dosen' => 'required',
+        'nama_mhs' => 'required',
+        'nama_dosen' => 'required',
+        'tgl_konsultasi' => 'required',
+        'topik' => 'required',
+        // 'status' tidak perlu divalidasi, karena kita akan set default-nya sendiri
+    ]);
+
+    if (!$rules) {
+        return $this->failValidationErrors([
+            'message' => $this->validator->getErrors()
         ]);
+    }
 
-        if (!$rules) {
-            return $this->failValidationErrors([
-                'message' => $this->validator->getErrors()
-            ]);
-        }
+    $data['status'] = 'menunggu'; // Set default status
 
-        $this->model->insert([
-            'id_mhs' => $data['id_mhs'],
-            'id_dosen' => $data['id_dosen'],
-            'nama_mhs' => $data['nama_mhs'],
-            'nama_dosen' => $data['nama_dosen'],
-            'tgl_konsultasi' => $data['tgl_konsultasi'],
-            'topik' => $data['topik'],
-        ]);
+    $this->model->insert($data);
 
-        return $this->respondCreated([
-            'message' => 'Data konsultasi berhasil ditambahkan'
-        ]);
+    return $this->respondCreated([
+        'message' => 'Data konsultasi berhasil ditambahkan',
+        'data' => $data
+    ]);
     }
 
     /**
@@ -95,38 +92,28 @@ class KonsultasiController extends ResourceController
     {
         $konsultasi = $this->model->find($id);
 
-        if (!$konsultasi) {
-            return $this->failNotFound('Data konsultasi tidak ditemukan');
-        }
+    if (!$konsultasi) {
+        return $this->failNotFound('Data konsultasi tidak ditemukan');
+    }
 
-        $rules = $this->validate([
-            'id_mhs' => 'required',
-            'id_dosen' => 'required',
-            'nama_mhs' => 'required',
-            'nama_dosen' => 'required',
-            'tgl_konsultasi' => 'required',
-            'topik' => 'required',
+    $data = $this->request->getJSON(true);
+
+    // Debug log sementara
+    log_message('debug', 'DATA MASUK: ' . json_encode($data));
+
+    if (!isset($data['status']) || !in_array($data['status'], ['disetujui', 'ditolak'])) {
+        return $this->failValidationErrors([
+            'status' => '"disetujui" atau "ditolak"'
         ]);
+    }
 
-        if (!$rules) {
-            return $this->failValidationErrors([
-                'message' => $this->validator->getErrors()
-            ]);
-        }
+    $this->model->protect(false)->update($id, ['status' => $data['status']]);
 
-        $this->model->update($id, [
-            'id_mhs' => $this->request->getVar('id_mhs'),
-            'id_dosen'       => $this->request->getVar('id_dosen'),
-            'nama_mhs' => $this->request->getVar('nama_mhs'),
-            'nama_dosen' => $this->request->getVar('nama_dosen'),
-            'tgl_konsultasi' => $this->request->getVar('tgl_konsultasi'),
-            'topik' => $this->request->getVar('topik'),
-            'status' => $this->request->getVar('status'),
-        ]);
 
-        return $this->respond([
-            'message' => 'Data konsultasi berhasil diperbarui'
-        ], 200);
+    return $this->respond([
+        'message' => 'Status konsultasi berhasil diperbarui',
+        'status' => $data['status']
+    ]);
     }
 
     /**

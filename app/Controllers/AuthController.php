@@ -20,22 +20,26 @@ class AuthController extends ResourceController
         $this->userModel = new UsersModel();
         $this->db = Database::connect();
     }
+
+    // Register function
     public function register()
     {
         $rules = $this->validate([
             'username' => 'required|string',
             'email' => 'required|valid_email',
             'password' => 'required|min_length[8]',
-            'role' => 'required|in_list[admin,dosen,mahasiswa]'
+            // 'role' => 'required|in_list[admin,dosen,mahasiswa]'
         ]);
 
         if (!$rules) {
             return $this->failValidationErrors($this->validator->getErrors(), 400);
         }
+
         $username = $this->request->getVar('username');
         $email    = $this->request->getVar('email');
         $password = $this->request->getVar('password'); 
-        $role     = $this->request->getVar('role');
+        $role     = 'mahasiswa';
+        // $role     = $this->request->getVar('role');
 
         $cekUser = $this->userModel->where('email', $email)->first();
         if ($cekUser) {
@@ -44,15 +48,34 @@ class AuthController extends ResourceController
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
+        // ✅ Tambahan: generate token & set verifikasi
+        $token = bin2hex(random_bytes(32));
+
         $this->userModel->insert([
-            'username' => $username,
-            'email' => $email,
-            'password' => $hashedPassword,
-            'role' => $role
+            'username'     => $username,
+            'email'        => $email,
+            'password'     => $hashedPassword,
+            'role'         => $role,
+            'token'        => $token,
+            'is_verified'  => false // Tambahan field verifikasi
         ]);
 
+        // Tambahan: Kirim email verifikasi
+        $emailService = \Config\Services::email();
+        $emailService->setFrom('backendpbf@gmail.com', 'Verifikasi Email Konsultasi Dosen');
+        $emailService->setTo($email);
+        $emailService->setSubject('Verifikasi Email Konsultasi Dosen');
+        $message = "Halo $username,\n\nKlik link berikut untuk verifikasi akun Anda:\n\n" .
+                base_url("auth/verify/$token");
+        $emailService->setMessage($message);
+
+        if (!$emailService->send()) {
+            return $this->failServerError($emailService->printDebugger(['headers']));
+        }
+
+        // ✅ Tetap tampilkan output versi kamu
         return $this->respondCreated([
-            'message' => 'User berhasil didaftarkan',
+            'message' => 'User berhasil didaftarkan. Silakan cek email untuk verifikasi.',
             'user' => [
                 'email' => $email,
                 'username' => $username,
@@ -61,9 +84,25 @@ class AuthController extends ResourceController
         ]);
     }
 
+    // Email verification function
+    public function verify($token)
+    {
+        $user = $this->userModel->where('token', $token)->first();
 
+        if (!$user) {
+            return $this->failNotFound('Token tidak valid.');
+        }
 
-    public function login()
+        $this->userModel->update($user['id'], [
+            'is_verified' => true,
+            'token' => null
+        ]);
+
+        return $this->respond(['message' => 'Email berhasil diverifikasi.']);
+    }
+
+        //Login function
+        public function login()
     {
         $email = $this->request->getVar('email');
         $password = $this->request->getVar('password');

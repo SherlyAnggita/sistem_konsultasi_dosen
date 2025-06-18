@@ -22,10 +22,17 @@ class DosenModel extends Model
 
     // Dates
     protected $useTimestamps = false;
+<<<<<<< HEAD
     // protected $dateFormat    = 'datetime';
     // protected $createdField  = 'created_at';
     // protected $updatedField  = 'updated_at';
     // protected $deletedField  = 'deleted_at';
+=======
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
+>>>>>>> 9f75f859c6f4ab538a3c4198eb9659be812a688b
 
     // Validation
     protected $validationRules      = [];

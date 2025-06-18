@@ -12,7 +12,11 @@ class KonsultasiModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
+<<<<<<< HEAD
     protected $allowedFields    = ['id_mhs','id_dosen','nama_mhs','nama_dosen','tgl_konsultasi','topik','status'];
+=======
+    protected $allowedFields    = ['id_mhs','id_dosen','nama_mhs','nama_dosen','tgl_konsultasi','topik'];
+>>>>>>> 9f75f859c6f4ab538a3c4198eb9659be812a688b
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -22,10 +26,17 @@ class KonsultasiModel extends Model
 
     // Dates
     protected $useTimestamps = false;
+<<<<<<< HEAD
     // protected $dateFormat    = 'datetime';
     // protected $createdField  = 'created_at';
     // protected $updatedField  = 'updated_at';
     // protected $deletedField  = 'deleted_at';
+=======
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
+>>>>>>> 9f75f859c6f4ab538a3c4198eb9659be812a688b
 
     // Validation
     protected $validationRules      = [];

@@ -34,10 +34,17 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+<<<<<<< HEAD
         'login'         => \Myth\Auth\Filters\LoginFilter::class,
         'jwt'           => \App\Filters\JwtAuth::class, // ✅ Ini yang kamu butuhkan
     ];
 
+=======
+        // 'login' => \Myth\Auth\Filters\LoginFilter::class,
+        'auth' => \App\Filters\AuthFilter::class,
+
+    ];
+>>>>>>> 9f75f859c6f4ab538a3c4198eb9659be812a688b
 
     /**
      * List of special required filters.

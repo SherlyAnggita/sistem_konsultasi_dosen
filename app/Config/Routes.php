@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+<<<<<<< HEAD
 $routes->post('auth/register', 'AuthController::register');
 $routes->post('auth/login', 'AuthController::login');
 
@@ -90,3 +91,25 @@ $routes->group('dosen', ['filter' => 'jwt:dosen'], function ($routes) {
     
 });
 
+=======
+// ADMIN: Semua route
+$routes->group('', ['filter' => 'auth:admin'], function($routes) {
+    $routes->resource('admin');
+    $routes->resource('users');
+    $routes->resource('mahasiswa');
+    $routes->resource('dosen');
+    $routes->resource('konsultasi');
+});
+
+// DOSEN: hanya akses ke detail_dosen dan jadwal_konsultasi
+$routes->group('', ['filter' => 'auth:dosen'], function($routes) {
+    $routes->resource('detail_dosen');
+    $routes->resource('jadwal_konsultasi');
+});
+
+// MAHASISWA: hanya akses ke detail_mahasiswa dan konsultasi
+$routes->group('', ['filter' => 'auth:mahasiswa'], function($routes) {
+    $routes->resource('detail_mahasiswa');
+    $routes->resource('konsultasi');
+});
+>>>>>>> 9f75f859c6f4ab538a3c4198eb9659be812a688b

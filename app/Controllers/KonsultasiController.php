@@ -53,6 +53,7 @@ class KonsultasiController extends ResourceController
      */
     public function create()
     {
+<<<<<<< HEAD
        $data = $this->request->getJSON(true); // true = convert ke array
 
     $rules = $this->validate([
@@ -79,6 +80,37 @@ class KonsultasiController extends ResourceController
         'message' => 'Data konsultasi berhasil ditambahkan',
         'data' => $data
     ]);
+=======
+        $data = $this->request->getJSON(true); // true = convert ke array
+
+        $rules = $this->validate([
+            'id_mhs' => 'required',
+            'id_dosen' => 'required',
+            'nama_mhs' => 'required',
+            'nama_dosen' => 'required',
+            'tgl_konsultasi' => 'required',
+            'topik' => 'required',
+        ]);
+
+        if (!$rules) {
+            return $this->failValidationErrors([
+                'message' => $this->validator->getErrors()
+            ]);
+        }
+
+        $this->model->insert([
+            'id_mhs' => $data['id_mhs'],
+            'id_dosen' => $data['id_dosen'],
+            'nama_mhs' => $data['nama_mhs'],
+            'nama_dosen' => $data['nama_dosen'],
+            'tgl_konsultasi' => $data['tgl_konsultasi'],
+            'topik' => $data['topik'],
+        ]);
+
+        return $this->respondCreated([
+            'message' => 'Data konsultasi berhasil ditambahkan'
+        ]);
+>>>>>>> 9f75f859c6f4ab538a3c4198eb9659be812a688b
     }
 
     /**
@@ -92,6 +124,7 @@ class KonsultasiController extends ResourceController
     {
         $konsultasi = $this->model->find($id);
 
+<<<<<<< HEAD
     if (!$konsultasi) {
         return $this->failNotFound('Data konsultasi tidak ditemukan');
     }
@@ -114,6 +147,39 @@ class KonsultasiController extends ResourceController
         'message' => 'Status konsultasi berhasil diperbarui',
         'status' => $data['status']
     ]);
+=======
+        if (!$konsultasi) {
+            return $this->failNotFound('Data konsultasi tidak ditemukan');
+        }
+
+        $rules = $this->validate([
+            'id_mhs' => 'required',
+            'id_dosen' => 'required',
+            'nama_mhs' => 'required',
+            'nama_dosen' => 'required',
+            'tgl_konsultasi' => 'required',
+            'topik' => 'required',
+        ]);
+
+        if (!$rules) {
+            return $this->failValidationErrors([
+                'message' => $this->validator->getErrors()
+            ]);
+        }
+
+        $this->model->update($id, [
+            'id_mhs' => $this->request->getVar('id_mhs'),
+            'id_dosen'       => $this->request->getVar('id_dosen'),
+            'nama_mhs' => $this->request->getVar('nama_mhs'),
+            'nama_dosen' => $this->request->getVar('nama_dosen'),
+            'tgl_konsultasi' => $this->request->getVar('tgl_konsultasi'),
+            'topik' => $this->request->getVar('topik'),
+        ]);
+
+        return $this->respond([
+            'message' => 'Data konsultasi berhasil diperbarui'
+        ], 200);
+>>>>>>> 9f75f859c6f4ab538a3c4198eb9659be812a688b
     }
 
     /**
